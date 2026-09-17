@@ -1,0 +1,24 @@
+---
+- name: Ensure backup directory exists on db host
+  ansible.builtin.file:
+    path: /home/ec2-user/backups
+    state: directory
+    mode: '0750'
+  when: inventory_hostname in groups['db']
+
+- name: Fetch notes.db from web host to control node
+  ansible.builtin.fetch:
+    src: "{{ db_path }}"
+    dest: "/tmp/notes-backups/{{ item }}-notes.db"
+    flat: true
+  become: true
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['web'] }}"
+  when: inventory_hostname in groups['db']
+
+- name: Copy fetched backup to db host
+  ansible.builtin.copy:
+    src: "/tmp/notes-backups/{{ item }}-notes.db"
+    dest: "/home/ec2-user/backups/{{ item }}-notes-{{ ansible_date_time.iso8601_basic_short }}.db"
+  loop: "{{ groups['web'] }}"
+  when: inventory_hostname in groups['db']

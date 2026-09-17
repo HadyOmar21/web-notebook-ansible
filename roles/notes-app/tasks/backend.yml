@@ -1,0 +1,23 @@
+---
+- name: Deploy app.py
+  ansible.builtin.copy:
+    src: app.py
+    dest: "{{ app_dir }}/app.py"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+  notify: restart notes-backend
+
+- name: Deploy systemd unit file
+  ansible.builtin.template:
+    src: notes-backend.service.j2
+    dest: /etc/systemd/system/notes-backend.service
+    mode: '0644'
+  notify: restart notes-backend
+
+- name: Enable and start notes-backend service
+  ansible.builtin.systemd:
+    name: notes-backend
+    daemon_reload: true
+    enabled: true
+    state: started

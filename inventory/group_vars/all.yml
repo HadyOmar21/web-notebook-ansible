@@ -1,0 +1,5 @@
+app_name: notes-app
+app_user: notesapp
+app_dir: /opt/notes-app
+app_port: 5000
+db_path: "{{ app_dir }}/notes.db"

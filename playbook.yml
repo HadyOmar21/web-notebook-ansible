@@ -1,0 +1,13 @@
+---
+- name: Deploy Notes App
+  hosts: web
+  become: true
+  roles:
+    - notes-app
+
+- name: Backup notes database to db host
+  hosts: db
+  become: false
+  tags: backup
+  roles:
+    - backup
