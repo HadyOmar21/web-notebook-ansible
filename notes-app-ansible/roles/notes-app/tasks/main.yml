@@ -1,0 +1,12 @@
+---
+- name: Include prerequisites tasks
+  ansible.builtin.import_tasks: prerequisites.yml
+
+- name: Include backend tasks
+  ansible.builtin.import_tasks: backend.yml
+
+- name: Include frontend tasks
+  ansible.builtin.import_tasks: frontend.yml
+  
+- name: Include security tasks
+  ansible.builtin.import_tasks: security.yml

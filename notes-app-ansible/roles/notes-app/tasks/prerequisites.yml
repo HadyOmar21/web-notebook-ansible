@@ -1,0 +1,28 @@
+---
+- name: Update all yum packages
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+  register: yum_update
+
+- name: Install Python3 and sqlite
+  ansible.builtin.yum:
+    name:
+      - python3
+      - sqlite
+    state: present
+
+- name: Create dedicated app user (no login shell needed)
+  ansible.builtin.user:
+    name: "{{ app_user }}"
+    system: true
+    shell: /sbin/nologin
+    create_home: false
+
+- name: Create application directory
+  ansible.builtin.file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'

@@ -1,0 +1,16 @@
+[Unit]
+Description=Notes App Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+WorkingDirectory={{ app_dir }}
+Environment=APP_DB_PATH={{ db_path }}
+Environment=APP_PORT={{ app_port }}
+ExecStart=/usr/bin/python3 {{ app_dir }}/app.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
